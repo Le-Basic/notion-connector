@@ -1,6 +1,7 @@
 import dlt
 import duckdb
 from notion import notion_databases
+from models import create_models
 
 
 def load_databases() -> None:
@@ -23,44 +24,6 @@ def load_databases() -> None:
     print(info)
 
 
-def create_model() -> None:
-    # load duckdb table
-    con = duckdb.connect("notion.duckdb")
-
-    df_taches = con.execute("SELECT * FROM notion_data.t_ches").fetchdf()
-
-    # TODO: filtre les archives et les deletes
-    # selectionner les colonnes pertinentes
-    df_taches = df_taches.rename(
-        columns={
-            "_dlt_id": "dlt_id",
-            "id": "notion_task_id",
-            "url": "notion_task_url",
-            "properties__niveau_de_t_che__formula__string": "notion_task_level",
-            "properties__etat__status__name": "notion_task_status",
-            "properties__p_riode__date__start": "notion_task_start_date",
-            "properties__p_riode__date__end": "notion_task_end_date",
-            "properties__jours_pass_s__number": "notion_task_days_passed",
-            "properties__jours_allou_s__number": "notion_task_days_allocated",
-        }
-    ).loc[
-        :,
-        [
-            "dlt_id",
-            "notion_task_id",
-            "notion_task_url",
-            "notion_task_level",
-            "notion_task_status",
-            "notion_task_start_date",
-            "notion_task_end_date",
-            "notion_task_days_passed",
-            "notion_task_days_allocated",
-        ],
-    ]
-
-    # joindre avec les rôles
-
-
 if __name__ == "__main__":
     # load_databases()
-    create_model()
+    create_models()
