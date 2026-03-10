@@ -56,6 +56,7 @@ def notion_databases(
     Yields:
         DltResource: Data resources from Notion databases.
     """
+
     notion_client = NotionClient(api_key)
 
     if database_ids is None:
