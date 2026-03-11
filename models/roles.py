@@ -18,12 +18,12 @@ def populate_role_title(
     )
 
     df_with_roles = df_tasks.merge(
-        df_roles_relation.loc[:, ["task_dlt_id", "notion_role_id"]],
+        df_roles_relation,
         left_on="dlt_id",
         right_on="task_dlt_id",
         how="left",
     ).merge(
-        df_roles.loc[:, ["notion_id", "role_title"]],
+        df_roles,
         left_on="notion_role_id",
         right_on="notion_id",
         how="left",
@@ -44,4 +44,4 @@ def fetch_roles(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
     df_roles = df_roles.merge(
         df_role_titles, left_on="dlt_id", right_on="dlt_parent_id", how="inner"
     )
-    return df_roles.loc[:, ["notion_id", "dlt_id", "role_title"]]
+    return df_roles.loc[:, ["notion_id", "role_title"]]

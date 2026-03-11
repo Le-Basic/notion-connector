@@ -3,6 +3,7 @@ import pandas as pd
 from .tasks import fetch_bricks
 from .roles import populate_role_title
 from .business_days import add_business_days_count, compute_tasks_days
+from .projects import populate_project_titles
 
 
 def create_models() -> None:
@@ -12,10 +13,10 @@ def create_models() -> None:
     df_bricks = populate_role_title(df_bricks, con)
 
     df_bricks = add_business_days_count(df_bricks)
+    df_bricks_with_project = populate_project_titles(df_bricks, con)
+    df_bricks_days = compute_tasks_days(df_bricks_with_project)
 
-    df_bricks_days = compute_tasks_days(df_bricks)
-
-    export_to_parquet(df_bricks, "bricks")
+    export_to_parquet(df_bricks_with_project, "bricks")
     export_to_parquet(df_bricks_days, "bricks_days")
 
 

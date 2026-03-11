@@ -16,6 +16,7 @@ def load_databases() -> None:
     selected_database_ids = [
         {"id": "66861714ea264e4cb4c65e1b0f278dde"},
         {"id": "17d6afc9ad648062a313c378efefbf70"},
+        {"id": "c7682d38bf184583b6d7306ccbb31b99"},
     ]
 
     data = notion_databases(database_ids=selected_database_ids)
