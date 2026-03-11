@@ -15,6 +15,17 @@ def add_business_days_count(df_tasks: pd.DataFrame) -> pd.DataFrame:
         ),
         axis=1,
     )
+    df_tasks["allocated_per_business_day"] = df_tasks.apply(
+        lambda row: (
+            (row["notion_task_days_allocated"] / row["business_days_count"])
+            if (
+                (row["notion_task_days_allocated"] is not None)
+                and (row["business_days_count"] != 0)
+            )
+            else 0
+        ),
+        axis=1,
+    )
     return df_tasks
 
 
@@ -45,7 +56,6 @@ def _create_calendar_df(df_tasks: pd.DataFrame) -> pd.DataFrame:
         }
     )
 
-    df_calendar["is_weekend"] = df_calendar["date"].dt.weekday >= 5
     df_calendar["first_day_of_the_week"] = df_calendar["date"] - pd.to_timedelta(
         df_calendar["date"].dt.weekday, unit="D"
     )

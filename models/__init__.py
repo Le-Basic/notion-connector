@@ -1,4 +1,5 @@
 import duckdb
+import pandas as pd
 from .tasks import fetch_bricks
 from .roles import populate_role_title
 from .business_days import add_business_days_count, compute_tasks_days
@@ -14,5 +15,12 @@ def create_models() -> None:
 
     df_bricks_days = compute_tasks_days(df_bricks)
 
-    df_bricks.to_parquet("exports/bricks.parquet", index=False)
-    df_bricks_days.to_parquet("exports/bricks_days.parquet", index=False)
+    export_to_parquet(df_bricks, "bricks")
+    export_to_parquet(df_bricks_days, "bricks_days")
+
+
+def export_to_parquet(df: pd.DataFrame, file_name: str) -> None:
+    df.loc[
+        :,
+        ~df.columns.isin(["dlt_id"]),
+    ].to_parquet(f"exports/{file_name}.parquet", index=False)
