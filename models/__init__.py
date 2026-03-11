@@ -14,5 +14,5 @@ def create_models() -> None:
 
     df_bricks_days = compute_tasks_days(df_bricks)
 
-    df_bricks.to_parquet("bricks.parquet", index=False)
-    df_bricks_days.to_parquet("bricks_days.parquet", index=False)
+    df_bricks.to_parquet("exports/bricks.parquet", index=False)
+    df_bricks_days.to_parquet("exports/bricks_days.parquet", index=False)
