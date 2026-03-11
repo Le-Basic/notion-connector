@@ -15,13 +15,14 @@ TASKS_COLUMNS = {
 }
 
 
-def fetch_tasks(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
+def fetch_bricks(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
     df_tasks = fetch_and_rename("t_ches", TASKS_COLUMNS, con)
 
-    df_tasks = df_tasks.astype(
+    df_bricks = df_tasks[df_tasks["notion_task_level"] == "Brique"]
+    df_bricks = df_bricks.astype(
         {
             "notion_task_start_date": "datetime64[ns]",
             "notion_task_end_date": "datetime64[ns]",
         }
     )
-    return df_tasks
+    return df_bricks

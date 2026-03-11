@@ -21,9 +21,7 @@ def add_business_days_count(df_tasks: pd.DataFrame) -> pd.DataFrame:
 def compute_tasks_days(df_tasks: pd.DataFrame) -> pd.DataFrame:
     df_calendar = _create_calendar_df(df_tasks)
 
-    df_brick = df_tasks[df_tasks["notion_task_level"] == "Brique"]
-
-    df_task_days = df_brick.merge(df_calendar, how="cross")
+    df_task_days = df_tasks.merge(df_calendar, how="cross")
 
     df_task_days = df_task_days[
         (df_task_days["date"] >= df_task_days["notion_task_start_date"])
