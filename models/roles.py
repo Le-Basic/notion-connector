@@ -7,7 +7,9 @@ ROLES_COLUMNS = {"id": "notion_id", "_dlt_id": "dlt_id"}
 ROLES_TITLE_COLUMNS = {"plain_text": "role_title", "_dlt_parent_id": "dlt_parent_id"}
 
 
-def populate_role_title(df_tasks: pd.Dataframe, con: duckdb.DuckDB) -> pd.DataFrame:
+def populate_role_title(
+    df_tasks: pd.DataFrame, con: duckdb.DuckDBPyConnection
+) -> pd.DataFrame:
     df_roles = fetch_roles(con)
     df_roles_relation = fetch_and_rename(
         "t_ches__properties__r_le_r_esponsable__relation",

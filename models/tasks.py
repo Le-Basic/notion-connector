@@ -15,7 +15,7 @@ TASKS_COLUMNS = {
 }
 
 
-def fetch_tasks(con: duckdb.DuckDBPyConnection) -> pd.Dataframe:
+def fetch_tasks(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
     df_tasks = fetch_and_rename("t_ches", TASKS_COLUMNS, con)
 
     df_tasks = df_tasks.astype(
