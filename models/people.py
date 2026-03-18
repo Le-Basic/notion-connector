@@ -9,6 +9,7 @@ def populate_accountables(
     df_accountable_relations = fetch_and_rename(
         "t_ches__properties___r_esponsable__people",
         {
+            "id": "notion_responsable_id",
             "_dlt_parent_id": "task_dlt_id",
             "name": "responsable",
         },

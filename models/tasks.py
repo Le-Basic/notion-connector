@@ -27,4 +27,24 @@ def fetch_bricks(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
             "notion_task_end_date": "datetime64[ns]",
         }
     )
-    return df_bricks
+    return _add_brick_name(df_bricks, con)
+
+
+def _add_brick_name(
+    df_bricks: pd.DataFrame, con: duckdb.DuckDBPyConnection
+) -> pd.DataFrame:
+    df_names = (
+        fetch_and_rename(
+            "t_ches__properties__nom__title",
+            {"plain_text": "task_name", "_dlt_parent_id": "task_dlt_id"},
+            con,
+        )
+        .groupby(["task_dlt_id"])
+        .apply(lambda row: "".join(row["task_name"]))
+        .reset_index(name="task_name")
+    )
+    df_bricks = df_bricks.merge(
+        df_names, left_on="dlt_id", right_on="task_dlt_id", how="left"
+    )
+
+    return df_bricks.loc[:, ~df_bricks.columns.isin(["task_dlt_id"])]
