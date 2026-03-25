@@ -3,9 +3,10 @@ import pandas as pd
 from .tasks import fetch_bricks
 from .roles import populate_role_title
 from .business_days import add_business_days_count, compute_tasks_days
-from .projects import populate_project_titles
+from .projects import populate_project_fields
 from .people import populate_accountables
 from .precomputed import compute_bricks_precomputed_fields
+from ..upload import uploadAsCSV
 
 
 def create_models() -> None:
@@ -16,21 +17,28 @@ def create_models() -> None:
 
     df_bricks = add_business_days_count(df_bricks)
     df_bricks_with_people = populate_accountables(df_bricks, con)
-    df_bricks_with_project = populate_project_titles(df_bricks_with_people, con)
-    df_bricks_filtered = filter_over_bricks(df_bricks_with_project)
+    df_bricks_with_project = populate_project_fields(df_bricks_with_people, con)
+    df_bricks_filtered = filter_bricks(df_bricks_with_project)
     df_bricks_with_all_fields = compute_bricks_precomputed_fields(df_bricks_filtered)
     df_bricks_days = compute_tasks_days(df_bricks_with_all_fields)
 
-    export_to_csv(df_bricks_with_all_fields, "bricks")
-    export_to_csv(df_bricks_days, "bricks_days")
+    uploadAsCSV(df_bricks_with_all_fields, "bricks")
+    uploadAsCSV(df_bricks_days, "bricks_days")
 
 
-def export_to_csv(df: pd.DataFrame, file_name: str) -> None:
-    df.loc[
-        :,
-        ~df.columns.isin(["dlt_id"]),
-    ].to_csv(f"exports/{file_name}.csv", index=False)
-
-
-def filter_over_bricks(df_bricks: pd.DataFrame) -> pd.DataFrame:
-    return df_bricks[~(df_bricks["notion_task_status"].isin(["Annulé", "Terminé"]))]
+def filter_bricks(df_bricks: pd.DataFrame) -> pd.DataFrame:
+    df_bricks_without_over = df_bricks[
+        ~(df_bricks["notion_task_status"].isin(["Annulé", "Terminé"]))
+    ]
+    inactive_project_statuses = [
+        "Prospection",
+        "TdR en cours",
+        "Début de négociation",
+        "Fin de négociation",
+        "Dead",
+        "Fini",
+    ]
+    df_bricks_without_inactive_projects = df_bricks_without_over[
+        ~(df_bricks_without_over["project_status"].isin(inactive_project_statuses))
+    ]
+    return df_bricks_without_inactive_projects

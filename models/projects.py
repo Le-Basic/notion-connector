@@ -3,7 +3,7 @@ import duckdb
 from .lib import fetch_and_rename
 
 
-def populate_project_titles(
+def populate_project_fields(
     df_tasks: pd.DataFrame, con: duckdb.DuckDBPyConnection
 ) -> pd.DataFrame:
     df_projects = fetch_projects(con)
@@ -34,7 +34,11 @@ def populate_project_titles(
     ]
 
 
-PROJETS_COLUMN = {"id": "notion_id", "_dlt_id": "dlt_id"}
+PROJETS_COLUMN = {
+    "id": "notion_id",
+    "_dlt_id": "dlt_id",
+    "properties___tat__status__name": "project_status",
+}
 PROJETS_TITLE_COLUMNS = {
     "plain_text": "project_title",
     "_dlt_parent_id": "dlt_parent_id",
@@ -49,4 +53,4 @@ def fetch_projects(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
     df_projects = df_projects.merge(
         df_project_titles, left_on="dlt_id", right_on="dlt_parent_id", how="inner"
     )
-    return df_projects.loc[:, ["notion_id", "project_title"]]
+    return df_projects.loc[:, ["notion_id", "project_title", "project_status"]]
