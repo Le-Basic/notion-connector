@@ -25,5 +25,5 @@ def load_databases() -> None:
 
 
 if __name__ == "__main__":
-    # load_databases()
+    load_databases()
     create_models()
