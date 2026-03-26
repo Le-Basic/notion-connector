@@ -6,7 +6,7 @@ from .business_days import add_business_days_count, compute_tasks_days
 from .projects import populate_project_fields
 from .people import populate_accountables
 from .precomputed import compute_bricks_precomputed_fields
-from ..upload import uploadAsCSV
+from upload import upload_as_csv
 
 
 def create_models() -> None:
@@ -22,8 +22,8 @@ def create_models() -> None:
     df_bricks_with_all_fields = compute_bricks_precomputed_fields(df_bricks_filtered)
     df_bricks_days = compute_tasks_days(df_bricks_with_all_fields)
 
-    uploadAsCSV(df_bricks_with_all_fields, "bricks")
-    uploadAsCSV(df_bricks_days, "bricks_days")
+    upload_as_csv(df_bricks_with_all_fields, "bricks.csv")
+    upload_as_csv(df_bricks_days, "bricks_days.csv")
 
 
 def filter_bricks(df_bricks: pd.DataFrame) -> pd.DataFrame:
