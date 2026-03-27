@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+from pathlib import Path
 from .connection import client
 
 sharepoint_folder_path = "3%20-%20POLE%20DONNEES/Z%20-%20Divers%20Code%20et%20Programmation/Notion-connector/data"
@@ -7,6 +8,7 @@ local_folder = "exports"
 
 
 def upload_as_csv(df: pd.DataFrame, file_name: str) -> None:
+    Path(local_folder).mkdir(parents=True, exist_ok=True)
     _export_to_csv(df, file_name)
     _upload_csv(file_name)
 
