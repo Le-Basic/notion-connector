@@ -1,4 +1,4 @@
-name: Python package
+name: Notion pipeline to extract data
 
 on: [push]
 
@@ -14,6 +14,7 @@ jobs:
         run: uv python install
       - name: Run the pipeline
         env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           SHAREPOINT_CLIENT_ID: ${{ secrets.SHAREPOINT_CLIENT_ID }}
           SHAREPOINT_CLIENT_SECRET: ${{ secrets.SHAREPOINT_CLIENT_SECRET }}
         run: uv run notion_pipeline.py
