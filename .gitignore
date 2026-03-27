@@ -12,6 +12,10 @@ _local
 *.duckdb
 *.wal 
 
+# Ignore parquet exports
+
+exports/
+
 # Git repository
 .git/
 
