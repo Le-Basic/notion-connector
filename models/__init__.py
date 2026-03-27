@@ -7,7 +7,8 @@ from .projects import populate_project_fields
 from .people import populate_accountables
 from .precomputed import compute_bricks_precomputed_fields
 from upload import upload_as_csv
-import datetime
+from datetime import datetime, timezone
+from dateutil import tz
 
 
 def create_models() -> None:
@@ -48,6 +49,6 @@ def filter_bricks(df_bricks: pd.DataFrame) -> pd.DataFrame:
 
 
 def create_df_infos():
-    return pd.DataFrame(
-        [[1, str(datetime.datetime.now())]], columns=["id", "Update time"]
-    )
+    paris_tz = tz.gettz("Europe/Paris")
+    now = datetime.now(paris_tz)
+    return pd.DataFrame([[1, str(now)]], columns=["id", "Update time"])

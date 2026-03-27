@@ -1,6 +1,9 @@
-name: Python package
+name: Notion pipeline to extract data
 
-on: [push]
+on: 
+  push:
+  schedule:
+    - cron: "45 0,12 * * *"
 
 jobs:
   pipeline:
@@ -10,10 +13,13 @@ jobs:
       - uses: actions/checkout@v6
       - name: Install uv
         uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
       - name: Set up Python
         run: uv python install
       - name: Run the pipeline
         env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           SHAREPOINT_CLIENT_ID: ${{ secrets.SHAREPOINT_CLIENT_ID }}
           SHAREPOINT_CLIENT_SECRET: ${{ secrets.SHAREPOINT_CLIENT_SECRET }}
         run: uv run notion_pipeline.py
