@@ -12,10 +12,13 @@ from .helpers.database import NotionDatabase
 import os
 from dotenv import load_dotenv
 
+load_dotenv()
+env_api_key = os.getenv("NOTION_API_KEY", "")
+
 
 @dlt.resource
 def notion_pages(
-    page_ids: Optional[List[str]] = None, api_key: str = dlt.secrets.value
+    page_ids: Optional[List[str]] = None, api_key: str = env_api_key
 ) -> Iterator[TDataItems]:
     """
     Retrieves pages from Notion.
@@ -43,7 +46,7 @@ def notion_pages(
 
 @dlt.source
 def notion_databases(
-    database_ids: Optional[List[Dict[str, str]]] = None,
+    database_ids: Optional[List[Dict[str, str]]] = None, api_key: str = env_api_key
 ) -> Iterator[DltResource]:
     """
     Retrieves data from Notion databases.
@@ -59,8 +62,6 @@ def notion_databases(
         DltResource: Data resources from Notion databases.
     """
 
-    load_dotenv()
-    api_key = os.getenv("NOTION_API_KEY", "")
     notion_client = NotionClient(api_key)
 
     if database_ids is None:
