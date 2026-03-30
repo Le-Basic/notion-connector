@@ -3,7 +3,7 @@ name: Notion pipeline to extract data
 on: 
   push:
   schedule:
-    - cron: "45 0,12 * * *"
+    - cron: "45 21,9 * * *"
 
 jobs:
   pipeline:
