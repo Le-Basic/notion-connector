@@ -1,16 +1,20 @@
 import pandas as pd
 import os
+from dotenv import load_dotenv
 from pathlib import Path
 from .connection import client
 
 sharepoint_folder_path = "3%20-%20POLE%20DONNEES/Z%20-%20Divers%20Code%20et%20Programmation/Notion-connector/data"
 local_folder = "exports"
+load_dotenv()
+ONLY_LOCAL_DUMP = os.getenv("ONLY_LOCAL_DUMP", "") == "True"
 
 
 def upload_as_csv(df: pd.DataFrame, file_name: str) -> None:
     Path(local_folder).mkdir(parents=True, exist_ok=True)
     _export_to_csv(df, file_name)
-    _upload_csv(file_name)
+    if not ONLY_LOCAL_DUMP:
+        _upload_csv(file_name)
 
 
 def _export_to_csv(df: pd.DataFrame, file_name: str) -> None:
@@ -18,6 +22,7 @@ def _export_to_csv(df: pd.DataFrame, file_name: str) -> None:
         :,
         ~df.columns.isin(["dlt_id"]),
     ].to_csv(_get_local_csv_path(file_name), index=False)
+    print("File {0} has been generated locally".format(file_name))
 
 
 def _upload_csv(file_name: str):
